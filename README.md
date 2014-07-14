@@ -14,5 +14,5 @@ app.use countryDetector.getMiddleware('./GeoLite2-City.mmdb', {
 
 ...
 
-console.log(req.country)
+console.log req.country
 ```

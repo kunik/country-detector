@@ -1,0 +1,29 @@
+{
+  "name": "country-detector",
+  "version": "0.0.1",
+  "description": "Country detector middleware for Express.js via maxmind-db-reader",
+  "main": "index.coffee",
+  "scripts": {
+    "build":        "coffee --bare --compile --output index.js index.coffee",
+    "prepublish":   "coffee --bare --compile --output index.js index.coffee",
+    "postpublish":  "rm -rf index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kunik/country-detector.git"
+  },
+  "keywords": [
+    "maxmind",
+    "geo-detection"
+  ],
+  "author": "Taras Kunch <taras.kunch@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kunik/country-detector/issues"
+  },
+  "homepage": "https://github.com/kunik/country-detector",
+  "dependencies": {
+    "maxmind-db-reader": "^0.2.0"
+  }
+}

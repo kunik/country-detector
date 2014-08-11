@@ -1,11 +1,11 @@
 {
   "name": "country-detector",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Country detector middleware for Express.js via maxmind-db-reader",
   "main": "index.coffee",
   "scripts": {
-    "build":        "coffee --bare --compile --output index.js index.coffee",
-    "prepublish":   "coffee --bare --compile --output index.js index.coffee",
+    "build":        "coffee --bare --compile --output ./ index.coffee",
+    "prepublish":   "coffee --bare --compile --output ./ index.coffee",
     "postpublish":  "rm -rf index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

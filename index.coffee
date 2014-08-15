@@ -1,6 +1,5 @@
 mmdb      = require 'maxmind-db-reader'
 geoip2    = require 'geoip2ws'
-precesion = (x) -> String(x).replace('.', '').length - x.toFixed().length
 
 module.extorts = class CountryDetector
   constructor: (mmdbPath, config = {}) ->
@@ -50,27 +49,28 @@ module.extorts = class CountryDetector
     return cb(null) if address == '127.0.0.1'
 
     @mmdbReader.getGeoData address, (err, geoData) =>
-      result = {
-        country: null
-        location: { latitude: 0, longitude: 0 }
-      }
+      result = @formatGeoData geoData
 
-      if geoData and geoData.country and geoData.location
-        result.country = geoData.country.iso_code.toLowerCase()
-        result.location.latitude = geoData.location.latitude
-        result.location.longitude = geoData.location.longitude
-
-      if @geoip2ws.call and precesion(result.location.latitude) < 3
-        @geoip2ws.call address, (err, geoData) ->
-          result.country = geoData.country.iso_code.toLowerCase()
-          result.location.latitude = geoData.location.latitude
-          result.location.longitude = geoData.location.longitude
+      if @geoip2ws.call and result.precision < 3
+        @geoip2ws.call address, (err, geoData) =>
+          result = @formatGeoData geoData
           cb result
-
-      else if result.country
-        cb result
       else
-        cb null
+        cb result
+
+  formatGeoData: (geoData) ->
+    result = { location: {} }
+
+    if geoData and geoData.country and geoData.location
+      result.country = geoData.country.iso_code.toLowerCase()
+      result.location.latitude = x = geoData.location.latitude
+      result.location.longitude = y = geoData.location.longitude
+      result.precision = Math.max(
+        String(x).replace('.', '').length - x.toFixed().length,
+        String(y).replace('.', '').length - y.toFixed().length
+      )
+
+    return result
 
   storeCountry: (res, geoData) ->
     res.cookie @cookie.name, [

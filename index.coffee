@@ -53,7 +53,7 @@ module.extorts = class CountryDetector
 
       if @geoip2ws.call and result.precision < 3
         @geoip2ws.call address, (err, geoData) =>
-          result = @formatGeoData geoData
+          result = @formatGeoData geoData if !err and geoData.location
           cb result
       else
         cb result

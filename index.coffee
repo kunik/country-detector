@@ -1,4 +1,6 @@
-mmdb = require 'maxmind-db-reader'
+mmdb      = require 'maxmind-db-reader'
+geoip2    = require 'geoip2ws'
+precesion = (x) -> String(x).replace('.', '').length - x.toFixed().length
 
 module.extorts = class CountryDetector
   constructor: (mmdbPath, config = {}) ->
@@ -6,6 +8,16 @@ module.extorts = class CountryDetector
     @cookie =
       name:   config.cookieName   || 'geo'
       maxAge: config.cookieMaxAge || 946707779241
+    @geoip2ws =
+      userId:     config.geoip2ws && config.geoip2ws.userId
+      licenseKey: config.geoip2ws && config.geoip2ws.licenseKey
+      type:      (config.geoip2ws && config.geoip2ws.type) || 'city'
+
+    if @geoip2ws.licenseKey
+      @geoip2ws.call = geoip2(
+        @geoip2ws.userId,
+        @geoip2ws.licenseKey,
+        @geoip2ws.type)
 
   middleware: (req, res, next) =>
     geoData = @detectByCookie req
@@ -28,32 +40,44 @@ module.extorts = class CountryDetector
       return {
         country: data[0]
         location: {
-          latitude: data[1]
-          longitude: data[2]
+          latitude: parseFloat data[1]
+          longitude: parseFloat data[2]
         }
       }
 
   detectByIp: (req, cb) ->
     address = req.ip
+    return cb(null) if address == '127.0.0.1'
 
-    @mmdbReader.getGeoData address, (err, geoData) ->
+    @mmdbReader.getGeoData address, (err, geoData) =>
+      result = {
+        country: null
+        location: { latitude: 0, longitude: 0 }
+      }
+
       if geoData and geoData.country and geoData.location
-        return cb({
-          country: geoData.country.iso_code.toLowerCase()
-          location: {
-            latitude: geoData.location.latitude
-            longitude: geoData.location.longitude
-          }
-        })
+        result.country = geoData.country.iso_code.toLowerCase()
+        result.location.latitude = geoData.location.latitude
+        result.location.longitude = geoData.location.longitude
 
-      cb(null)
+      if @geoip2ws.call and precesion(result.location.latitude) < 3
+        @geoip2ws.call address, (err, geoData) ->
+          result.country = geoData.country.iso_code.toLowerCase()
+          result.location.latitude = geoData.location.latitude
+          result.location.longitude = geoData.location.longitude
+          cb result
+
+      else if result.country
+        cb result
+      else
+        cb null
 
   storeCountry: (res, geoData) ->
     res.cookie @cookie.name, [
       geoData.country
       geoData.location.latitude
       geoData.location.longitude
-      ].join(), maxAge: @cookie.maxAge
+      ].join('|'), maxAge: @cookie.maxAge
 
   updateRequest: (req, geoData) ->
     req.country = geoData.country

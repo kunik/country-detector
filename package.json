@@ -1,12 +1,12 @@
 {
   "name": "country-detector",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Country detector middleware for Express.js via maxmind-db-reader",
   "main": "index.coffee",
   "scripts": {
     "build": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.coffee\" -exec coffee --compile {} \\;",
     "prepublish": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.coffee\" -exec coffee --compile {} \\;",
-    "postpublish": "rm -rf index.js",
+    "postpublish": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.js\" -exec rm {} \\;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -23,23 +23,18 @@ module.exports = class RedisStore extends Store
   key: (x) -> "#{@prefix()}#{x}"
 
   get: (_key) =>
-    console.log 'redis-get', @key(_key)
     deferred = Q.defer()
 
     @client().get @key(_key), (err, value)->
-      console.log('redis-get-value', err, value)
       return deferred.reject() if err || !value
 
       try
-        console.log('redis-get-parse-json', JSON.parse(value))
         deferred.resolve JSON.parse(value)
       catch
-        console.log 'redis-get-parse-reject'
         deferred.reject()
 
     return deferred.promise
 
   set: (_key, value) =>
-    console.log 'redis-set', @key(_key), value
     Q.ninvoke(@client(), 'setex', @key(_key), @ttl(), JSON.stringify(value))
       .then () -> value

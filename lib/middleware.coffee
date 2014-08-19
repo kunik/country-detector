@@ -27,9 +27,8 @@ module.extorts = class CountryDetector
 
     @store.setContext(req, res)
     @store.get ip
-      .then (geoData) -> console.log('then', geoData); utils.formatGeoData geoData
+      .then (geoData) -> utils.formatGeoData geoData
       .fail () =>
-        console.log('fail', arguments)
         @detectByIp ip
           .then (geoData) => @store.set(ip, geoData)
       .fail (geoData) -> geoData

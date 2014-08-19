@@ -1,11 +1,11 @@
 {
   "name": "country-detector",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Country detector middleware for Express.js via maxmind-db-reader",
   "main": "index.coffee",
   "scripts": {
-    "build": "coffee --bare --compile --output ./ index.coffee",
-    "prepublish": "coffee --bare --compile --output ./ index.coffee",
+    "build": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.coffee\" -exec coffee --compile {} \\;",
+    "prepublish": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.coffee\" -exec coffee --compile {} \\;",
     "postpublish": "rm -rf index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +25,8 @@
   "homepage": "https://github.com/kunik/country-detector",
   "dependencies": {
     "geoip2ws": "^1.2.0",
-    "maxmind-db-reader": "^0.2.0"
+    "maxmind-db-reader": "^0.2.0",
+    "q": "^1.0.1",
+    "redis": "^0.12.1"
   }
 }

@@ -23,7 +23,7 @@ module.extorts = class CountryDetector
         @geoip2ws.type)
 
   middleware: (req, res, next) =>
-    ip = req.ip = '46.164.156.82'
+    ip = req.ip# = '46.164.156.82'
 
     @store.setContext(req, res)
     @store.get ip

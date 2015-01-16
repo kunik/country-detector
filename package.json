@@ -1,6 +1,6 @@
 {
   "name": "country-detector",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Country detector middleware for Express.js via maxmind-db-reader",
   "main": "index.coffee",
   "scripts": {

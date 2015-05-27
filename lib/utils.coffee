@@ -20,8 +20,4 @@ module.exports = utils =
       result.location.longitude = y = geoData.location.longitude
 
       result.precision = utils.precision(x, y)
-
-      result.city = geoData.city if geoData.city
-      result.cityGeonameId = geoData.city.geoname_id if geoData.city and geoData.city.geoname_id
-
     return result

@@ -7,7 +7,9 @@
     "build": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.coffee\" -exec coffee --compile {} \\;",
     "prepublish": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.coffee\" -exec coffee --compile {} \\;",
     "postpublish": "find . -path ./public -prune -o -path ./node_modules -prune -o -name \"*.js\" -exec rm {} \\;",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,8 @@
     "geoip2ws": "^1.2.0",
     "maxmind-db-reader": "^0.2.0",
     "q": "^1.0.1",
-    "redis": "^0.12.1"
-  }
+    "redis": "^0.12.1",
+    "snyk": "^1.104.2"
+  },
+  "snyk": true
 }
